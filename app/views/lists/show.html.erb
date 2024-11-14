@@ -1,31 +1,36 @@
-<h1><%= @list.name %></h1>
+<div class="container mt-4">
+  <!-- Title -->
+  <br><br><h1 class="text-center"><%= @list.name %></h1><br><br>
 
-<h2>Movies in this List:</h2>
-<% if @list.movies.any? %>
-  <ul>
-    <% @list.bookmarks.each do |bookmark| %>
-      <li>
-        <strong><%= bookmark.movie.title %></strong> - <%= bookmark.comment %>
-        <%= link_to "Remove", list_bookmark_path(@list, bookmark),
-            method: :delete,
-            data: { confirm: "Are you sure?" },
-            class: "btn btn-danger btn-sm" %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No movies in this list yet.</p>
-<% end %>
+  <!-- Movies in this List -->
+  <h2 class="text-center">Movies in this List:</h2>
+  <% if @list.movies.any? %>
+    <div class="d-flex flex-column align-items-center w-100">
+      <% @list.bookmarks.each do |bookmark| %>
+        <div class="d-flex w-50 justify-content-between align-items-center mb-3 mx-auto">
+          <!-- Movie title as a grey button with left aligned text -->
+          <%= button_to bookmark.movie.title, "#", class: "btn btn-secondary text-start" %>
+          <%= link_to "Remove", bookmark, method: :delete,
+              data: { confirm: "Are you sure?" },
+              class: "btn btn-danger btn-sm ms-2" %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-center">No movies in this list yet.</p>
+  <% end %>
 
-<hr>
+  <hr>
 
-<h2>Add a Movie to this List:</h2>
-<%= form_with model: [@list, Bookmark.new], local: true do |f| %>
-  <div class="form-group">
-    <%= f.select :movie_id, options_from_collection_for_select(@movies, :id, :title), { prompt: "Select a Movie" }, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.text_field :comment, class: "form-control", placeholder: "Add a comment" %>
-  </div>
-  <%= f.submit "Add Movie", class: "btn btn-success" %>
-<% end %>
+  <!-- Add a Movie to this List -->
+  <h2 class="text-center">Add a Movie to this List:</h2>
+  <%= form_with model: [@list, Bookmark.new], local: true do |f| %>
+    <div class="form-group mb-3">
+      <%= f.select :movie_id, options_from_collection_for_select(@movies, :id, :title), { prompt: "Select a Movie" }, class: "form-control w-75 mx-auto" %>
+    </div>
+    <div class="form-group mb-3">
+      <%= f.text_field :comment, class: "form-control w-75 mx-auto", placeholder: "Add a comment" %>
+    </div>
+    <%= f.submit "Add Movie", class: "btn btn-success w-75 d-block mx-auto mb-3" %>
+  <% end %>
+</div>
