@@ -1,3 +1,31 @@
 <h1><%= @list.name %></h1>
 
-<%= link_to 'Back to Lists', lists_path %>
+<h2>Movies in this List:</h2>
+<% if @list.movies.any? %>
+  <ul>
+    <% @list.bookmarks.each do |bookmark| %>
+      <li>
+        <strong><%= bookmark.movie.title %></strong> - <%= bookmark.comment %>
+        <%= link_to "Remove", list_bookmark_path(@list, bookmark),
+            method: :delete,
+            data: { confirm: "Are you sure?" },
+            class: "btn btn-danger btn-sm" %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No movies in this list yet.</p>
+<% end %>
+
+<hr>
+
+<h2>Add a Movie to this List:</h2>
+<%= form_with model: [@list, Bookmark.new], local: true do |f| %>
+  <div class="form-group">
+    <%= f.select :movie_id, options_from_collection_for_select(@movies, :id, :title), { prompt: "Select a Movie" }, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.text_field :comment, class: "form-control", placeholder: "Add a comment" %>
+  </div>
+  <%= f.submit "Add Movie", class: "btn btn-success" %>
+<% end %>
